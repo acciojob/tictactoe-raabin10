@@ -1,16 +1,127 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplayer Tic Tac Toe</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+        }
+        .message {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
 </head>
-
 <body>
-	<!-- the entire body must be written by student -->
-    <script type="text/javascript" src="./script.js">
+
+<div class="container">
+    <h1>Tic Tac Toe</h1>
+    <div>
+        <label for="player-1">Player 1 Name:</label>
+        <input type="text" id="player-1" placeholder="Enter Player 1's Name">
+    </div>
+    <div>
+        <label for="player-2">Player 2 Name:</label>
+        <input type="text" id="player-2" placeholder="Enter Player 2's Name">
+    </div>
+    <button id="submit" onclick="startGame()">Submit</button>
+
+    <div class="message"></div>
+
+    <div class="board" style="display:none;">
+        <!-- Cells will be dynamically added here -->
+    </div>
+</div>
+
+<script>
+    let currentPlayer = 1;
+    let player1Name = "";
+    let player2Name = "";
+    let board = Array(9).fill("");
+    const messageElement = document.querySelector('.message');
+    const boardElement = document.querySelector('.board');
+
+    function startGame() {
+        player1Name = document.getElementById('player-1').value;
+        player2Name = document.getElementById('player-2').value;
+
+        if (player1Name && player2Name) {
+            document.querySelector('.container').style.display = 'none';
+            messageElement.textContent = `${player1Name}, you're up!`;
+            boardElement.style.display = 'grid';
+            createBoard();
+        } else {
+            alert("Please enter names for both players.");
+        }
+    }
+
+    function createBoard() { 
+        for (let i = 1; i <= 9; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.id = i;
+            cell.onclick = () => makeMove(i);
+            boardElement.appendChild(cell);
+        }
+    }
+
+    function makeMove(cellIndex) {
+        if (!board[cellIndex - 1]) {
+            board[cellIndex - 1] = currentPlayer === 1 ? 'X' : 'O';
+            document.getElementById(cellIndex).textContent = board[cellIndex - 1];
+            checkWinner();
+            currentPlayer = 3 - currentPlayer; // Switch player (1 to 2 or 2 to 1)
+            messageElement.textContent = `${currentPlayer === 1 ? player1Name : player2Name}, you're up!`;
+        }
+    }
+
+    function checkWinner() {
+        const winningCombinations = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+
+        for (const combo of winningCombinations) {
+            const [a, b, c] = combo;
+            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                messageElement.textContent = `${currentPlayer === 1 ? player1Name : player2Name}, congratulations, you won!`;
+                return;
+            }
+        }
+
+        if (!board.includes("")) {
+            messageElement.textContent = "It's a tie!";
+        }
+    }
 </script>
 
-</body>
-
+</body> 
 </html>
