@@ -1,118 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    .container {
-      text-align: center;
-      margin: 50px;
-    }
-
-    #board {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .cell {
-      width: 100px;
-      height: 100px;
-      border: 1px solid #000;
-      font-size: 24px;
-      cursor: pointer;
-    }
-
-    .message {
-      margin-top: 20px;
-      font-size: 18px;
-    }
-  </style>
-  <title>Tic Tac Toe</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Multiplayer Tic Tac Toe</title>
 </head>
 <body>
 
 <div class="container">
-  <div id="player-names">
-    <label for="player-1">Player 1:</label>
-    <input type="text" id="player-1" placeholder="Enter name for Player 1">
-
-    <label for="player-2">Player 2:</label>
-    <input type="text" id="player-2" placeholder="Enter name for Player 2">
-
+    <input type="text" id="player-1" placeholder="Player 1">
+    <input type="text" id="player-2" placeholder="Player 2">
     <button id="submit" onclick="startGame()">Submit</button>
-  </div>
-
-  <h1>Tic Tac Toe</h1>
-
-  <div class="message" id="message"></div>
-
-  <div id="board"></div>
+    <h1>Tic Tac Toe</h1>
+    <div class="message"></div>
+    <div class="board" onclick="handleCellClick(event)"></div>
 </div>
 
-<script>
-  let currentPlayer = 1;
-  let board = ['', '', '', '', '', '', '', '', ''];
-  let gameActive = false;
-
-  function startGame() {
-    const player1Name = document.getElementById('player-1').value;
-    const player2Name = document.getElementById('player-2').value;
-
-    document.getElementById('player-names').style.display = 'none';
-    document.getElementById('message').innerText = `${player1Name}, you're up!`;
-    createBoard();
-    gameActive = true;
-  }
-
-  function createBoard() {
-    const boardElement = document.getElementById('board');
-
-    for (let i = 0; i < 9; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'cell';
-      cell.id = i + 1;
-      cell.addEventListener('click', () => handleCellClick(i + 1));
-      boardElement.appendChild(cell);
-    }
-  }
-
-  function handleCellClick(cellId) {
-    if (!gameActive || board[cellId - 1] !== '') return;
-
-    const player = currentPlayer === 1 ? 'X' : 'O';
-    board[cellId - 1] = player;
-    document.getElementById(cellId).innerText = player;
-
-    if (checkWin()) {
-      const winner = currentPlayer === 1 ? document.getElementById('player-1').value : document.getElementById('player-2').value;
-      document.getElementById('message').innerText = `${winner}, congratulations, you won!`;
-      gameActive = false;
-    } else {
-      currentPlayer = currentPlayer === 1 ? 2 : 1;
-      const nextPlayer = currentPlayer === 1 ? document.getElementById('player-1').value : document.getElementById('player-2').value;
-      document.getElementById('message').innerText = `${nextPlayer}, you're up!`;
-    }
-  }
-
-  function checkWin() {
-    const winConditions = [
-      [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-      [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-      [0, 4, 8], [2, 4, 6]             // Diagonals
-    ];
-
-    for (const condition of winConditions) {
-      const [a, b, c] = condition;
-      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-        return true;
-      }
-    } 
-
-    return false;
-  }
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
